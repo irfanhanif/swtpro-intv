@@ -50,7 +50,7 @@ paths:
       tags:
         - Sign Up & Login
       summary: Create token for a user
-      description: Use this api to create token for a user
+      description: Use this API to create token for a user
       requestBody:
         content:
           application/json:
@@ -70,7 +70,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InternalServerError"
+                $ref: "#/components/schemas/Error"
+
+  /v1/users/{userID}/profile:
+    get:
+      tags:
+        - User Profile
+      summary: Get profile of a user
+      description: Use this API to get profile of a user
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
+      responses:
+        200:
+          description: Successfully get a profile of a user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetV1UsersProfile"
+        400:
+          description: Invalid request. Could be userID empty or format invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        404:
+          description: User ID is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
@@ -130,9 +170,19 @@ components:
           type: string
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
-    InternalServerError:
+    GetV1UsersProfile:
       type: object
       properties:
-        message:
+        phoneNumber:
           type: string
-          example: "something wrong happened"
+          example: '+6281234567890'
+        fullName:
+          type: string
+          example: John Doe
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "an error message"
