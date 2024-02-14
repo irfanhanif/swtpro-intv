@@ -1,13 +1,3 @@
-# This is the OpenAPI specification for your service. It is used to generate the client code.
-# To generate the server code, use the Gradle task `openApiGenerate`. The 
-# generated code will be placed in `build/generate-resources/main`.
-#
-# We will evaluate you based on how well you design your API.
-# 1. How well it follows REST principles.
-# 2. How easy it is to understand and use.
-#
-# References
-# 1. https://swagger.io/specification/
 openapi: "3.0.0"
 info:
   version: 1.0.0
@@ -15,44 +5,87 @@ info:
   license:
     name: MIT
 servers:
-  - url: http://localhost
+  - url: http://localhost:8080
+
+tags:
+  - name: Sign Up & Login
+    description: APIs for new user sign up and login
+  - name: User Profile
+    description: APIs for user profile data
+
 paths:
-  /hello:
-    get:
-      summary: This is just a test endpoint to get you started. Please delete this endpoint.
-      operationId: hello
-      parameters:
-        - name: id
-          in: query
-          required: true
-          schema:
-            type: integer
+  /v1/users:
+    post:
+      tags:
+        - Sign Up & Login
+      summary: Create a new user
+      description: Use this api to register a new user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostV1UsersRequest"
       responses:
-        '200':
-          description: Test return
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/HelloResponse"
-        '404':
-          description: Not found
+        201:
+          description: A new user successfully created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/PostV1UsersResponse201"
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/PostV1UsersResponse400"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
 components:
   schemas:
-    HelloResponse:
+    PostV1UsersRequest:
       type: object
       required:
-        - message
+        - phoneNumber
+        - fullName
+        - password
+      properties:
+        phoneNumber:
+          type: string
+          example: '+6281234567890'
+        fullName:
+          type: string
+          example: John Doe
+        password:
+          type: string
+          example: ThisIsAPassword1234&
+
+    PostV1UsersResponse201:
+      type: object
+      properties:
+        userID:
+          type: uuid
+          example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
+
+    PostV1UsersResponse400:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: string
+          example:
+            - "phoneNumber must initiated with +62"
+            - "fullName must at least 3 characters and max 60 characters"
+            - "password must at least 6 characters and max 64 characters"
+
+    InternalServerError:
+      type: object
       properties:
         message:
           type: string
-    ErrorResponse:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
+          example: "something wrong happened"
