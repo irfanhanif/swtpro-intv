@@ -45,6 +45,33 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
 
+  /v1/tokens:
+    post:
+      tags:
+        - Sign Up & Login
+      summary: Create token for a user
+      description: Use this api to create token for a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostV1TokensRequest"
+      responses:
+        201:
+          description: A new tokens successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostV1TokensResponse201"
+        400:
+          description: Unsuccessful login
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
 components:
   schemas:
     PostV1UsersRequest:
@@ -82,6 +109,26 @@ components:
             - "phoneNumber must initiated with +62"
             - "fullName must at least 3 characters and max 60 characters"
             - "password must at least 6 characters and max 64 characters"
+
+    PostV1TokensRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          example: '+6281234567890'
+        password:
+          type: string
+          example: ThisIsAPassword1234&
+
+    PostV1TokensResponse201:
+      type: object
+      properties:
+        userID:
+          type: uuid
+          example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
     InternalServerError:
       type: object
