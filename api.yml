@@ -45,7 +45,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
 
-  /v1/tokens:
+  /v1/token:
     post:
       tags:
         - Sign Up & Login
@@ -55,14 +55,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostV1TokensRequest"
+              $ref: "#/components/schemas/PostV1TokenRequest"
       responses:
         201:
           description: A new tokens successfully created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PostV1TokensResponse201"
+                $ref: "#/components/schemas/PostV1TokenResponse201"
         400:
           description: Unsuccessful login
         500:
@@ -150,7 +150,7 @@ components:
             - "fullName must at least 3 characters and max 60 characters"
             - "password must at least 6 characters and max 64 characters"
 
-    PostV1TokensRequest:
+    PostV1TokenRequest:
       type: object
       properties:
         phoneNumber:
@@ -160,7 +160,7 @@ components:
           type: string
           example: ThisIsAPassword1234&
 
-    PostV1TokensResponse201:
+    PostV1TokenResponse201:
       type: object
       properties:
         userID:
