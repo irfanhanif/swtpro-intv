@@ -2,6 +2,7 @@ package users
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/irfanhanif/swtpro-intv/generated"
 	handlerCtx "github.com/irfanhanif/swtpro-intv/handler/context"
 	"github.com/irfanhanif/swtpro-intv/service"
@@ -63,10 +64,13 @@ func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 		Password:    req.Password,
 		FullName:    req.FullName,
 	})
-	if fieldErrors, ok := err.(*service.FieldErrors); ok {
+	if fieldErrors, ok := err.(*service.ErrFields); ok {
 		return ctx.JSON(http.StatusBadRequest, &generated.PostV1UsersResponse400{
 			Message: fieldErrors.Errs,
 		})
+	}
+	if errors.Is(err, service.ErrPhoneNumberConflict) {
+		return ctx.JSON(http.StatusConflict, &generated.Error{Error: err.Error()})
 	}
 
 	return ctx.JSON(http.StatusCreated, &generated.PostV1UsersResponse201{

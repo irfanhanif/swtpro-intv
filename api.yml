@@ -38,6 +38,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PostV1UsersResponse400"
+        409:
+          description: Phone number is already exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         500:
           description: Internal server error
           content:
@@ -267,6 +273,8 @@ components:
 
     Error:
       type: object
+      required:
+        - error
       properties:
         error:
           type: string

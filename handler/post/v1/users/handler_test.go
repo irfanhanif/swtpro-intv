@@ -177,13 +177,43 @@ func TestHandlePostV1Users(t *testing.T) {
 					FullName:    "John Doe",
 				},
 				returnUUID: uuid.Nil,
-				returnError: &service.FieldErrors{
+				returnError: &service.ErrFields{
 					Errs: []string{
 						"invalid fullName",
 						"invalid password",
 						"invalid phoneNumber",
 					},
 				},
+			},
+			wantErr: nil,
+		},
+		"should return nil " +
+			"with status 409 conflict " +
+			"when phone number already exists": {
+			args: args{
+				request: func() *http.Request {
+					req := &generated.PostV1UsersRequest{
+						PhoneNumber: "+6281234567890",
+						Password:    "ThisIsAPassword1234!",
+						FullName:    "John Doe",
+					}
+					b, _ := json.Marshal(req)
+					return httptest.NewRequest("post", "/v1/users", bytes.NewReader(b))
+				}(),
+			},
+			expectContextJSON: &expectContextJSON{
+				code:        409,
+				body:        &generated.Error{Error: "given phone number already exists"},
+				returnError: nil,
+			},
+			expectRegisterNewUser: &expectRegisterNewUser{
+				newUser: service.NewUser{
+					PhoneNumber: "+6281234567890",
+					Password:    "ThisIsAPassword1234!",
+					FullName:    "John Doe",
+				},
+				returnUUID:  uuid.Nil,
+				returnError: service.ErrPhoneNumberConflict,
 			},
 			wantErr: nil,
 		},
