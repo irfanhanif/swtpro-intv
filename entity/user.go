@@ -89,6 +89,12 @@ func (u *user) Validate() []error {
 		errs = append(errs, fmt.Errorf("Phone Number must has %s as a prefix", INDONESIA_PHONE_CODE))
 	}
 
+	if len(u.password) < MIN_PASSWORD_CHARS {
+		errs = append(errs, fmt.Errorf("Password cannot less than %d characters", MIN_PASSWORD_CHARS))
+	}
+	if len(u.password) > MAX_PASSWORD_CHARS {
+		errs = append(errs, fmt.Errorf("Password cannot more than %d characters", MAX_PASSWORD_CHARS))
+	}
 	if !u.checkPassword(u.password) {
 		errs = append(errs, errors.New("Password must have a capital letter, a number, a special character (non alpha numberic)"))
 	}
@@ -124,10 +130,6 @@ func (u *user) checkPassword(password string) bool {
 		case unicode.IsSymbol(c) || unicode.IsPunct(c):
 			specialCharacterPresent = true
 		}
-	}
-
-	if len(password) < MIN_PASSWORD_CHARS || len(password) > MAX_PASSWORD_CHARS {
-		return false
 	}
 
 	return lowerCasePresent && uppercasePresent && numberPresent && specialCharacterPresent

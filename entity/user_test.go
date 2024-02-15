@@ -84,6 +84,30 @@ func Test_user_Validate(t *testing.T) {
 			},
 		},
 		{
+			name: "should returns password errors since it is less than 6 characters",
+			fields: fields{
+				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
+				phoneNumber: "+628123456789",
+				password:    "Th1s!",
+				fullName:    "John Doe",
+			},
+			want: []error{
+				errors.New("Password cannot less than 6 characters"),
+			},
+		},
+		{
+			name: "should returns password errors since it is less than 6 characters",
+			fields: fields{
+				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
+				phoneNumber: "+628123456789",
+				password:    "Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!Th1s!",
+				fullName:    "John Doe",
+			},
+			want: []error{
+				errors.New("Password cannot more than 64 characters"),
+			},
+		},
+		{
 			name: "should returns password errors no uppercase letter",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
@@ -132,7 +156,7 @@ func Test_user_Validate(t *testing.T) {
 			},
 		},
 		{
-			name: "should returns full name error fulle name is less than 3 characters",
+			name: "should returns full name error full name is less than 3 characters",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
 				phoneNumber: "+628123456789",
