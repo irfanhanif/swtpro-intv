@@ -22,7 +22,14 @@ func NewHandler(svc service.IRegisterNewUser) *handler {
 func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 	request := ctx.Request()
 
-	bodyBytes, _ := io.ReadAll(request.Body)
+	bodyBytes, err := io.ReadAll(request.Body)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, &generated.PostV1UsersResponse400{
+			Message: []string{
+				err.Error(),
+			},
+		})
+	}
 	defer request.Body.Close()
 
 	req := &generated.PostV1UsersJSONRequestBody{}
@@ -34,9 +41,7 @@ func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 		FullName:    req.FullName,
 	})
 
-	ctx.JSON(http.StatusCreated, &generated.PostV1UsersResponse201{
+	return ctx.JSON(http.StatusCreated, &generated.PostV1UsersResponse201{
 		UserID: userID.String(),
 	})
-
-	return nil
 }

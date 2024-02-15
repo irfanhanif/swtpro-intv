@@ -3,6 +3,7 @@ package users
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/generated"
@@ -10,13 +11,20 @@ import (
 	"github.com/irfanhanif/swtpro-intv/service"
 	serviceMock "github.com/irfanhanif/swtpro-intv/service/mock"
 	"github.com/stretchr/testify/assert"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
+type readError struct{}
+
+func (re *readError) Read(p []byte) (n int, err error) {
+	return 0, errors.New("fail to read")
+}
+
 func TestHandlePostV1Users(t *testing.T) {
 	type args struct {
-		request *generated.PostV1UsersRequest
+		request *http.Request
 	}
 	type expectContextJSON struct {
 		code int
@@ -46,11 +54,15 @@ func TestHandlePostV1Users(t *testing.T) {
 			"and user id" +
 			"when new user successfully registered": {
 			args: args{
-				request: &generated.PostV1UsersRequest{
-					FullName:    "John Doe",
-					Password:    "ThisIsAPassword1234!",
-					PhoneNumber: "+6281234567890",
-				},
+				request: func() *http.Request {
+					req := &generated.PostV1UsersRequest{
+						FullName:    "John Doe",
+						Password:    "ThisIsAPassword1234!",
+						PhoneNumber: "+6281234567890",
+					}
+					b, _ := json.Marshal(req)
+					return httptest.NewRequest("post", "/v1/users", bytes.NewReader(b))
+				}(),
 			},
 			expectContextJSON: &expectContextJSON{
 				code: 201,
@@ -70,6 +82,24 @@ func TestHandlePostV1Users(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		"should return error " +
+			"with status 400 bad request " +
+			"and message body invalid" +
+			"when body request unreadable": {
+			args: args{
+				request: httptest.NewRequest("post", "/v1/users", &readError{}),
+			},
+			expectContextJSON: &expectContextJSON{
+				code: 400,
+				body: &generated.PostV1UsersResponse400{
+					Message: []string{
+						"fail to read",
+					},
+				},
+				returnError: nil,
+			},
+			wantErr: nil,
+		},
 	}
 
 	for name, test := range tests {
@@ -79,9 +109,7 @@ func TestHandlePostV1Users(t *testing.T) {
 			mockRegisterNewUser := serviceMock.NewMockIRegisterNewUser(mockCtrl)
 
 			if test.args.request != nil {
-				req := test.args.request
-				b, _ := json.Marshal(req)
-				mockCtx.EXPECT().Request().Return(httptest.NewRequest("post", "/v1/users", bytes.NewReader(b)))
+				mockCtx.EXPECT().Request().Return(test.args.request)
 			}
 
 			if test.expectContextJSON != nil {
