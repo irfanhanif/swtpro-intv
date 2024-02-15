@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	jwtLib "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"time"
@@ -24,7 +23,6 @@ func NewJWT(secretKey []byte) *jwt {
 func (j *jwt) GenerateJWT(userID uuid.UUID) (string, error) {
 	key, err := jwtLib.ParseRSAPrivateKeyFromPEM(j.secretKey)
 	if err != nil {
-		fmt.Println("errors di sini ta?", err)
 		return "", err
 	}
 
