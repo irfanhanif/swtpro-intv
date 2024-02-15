@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	entity "github.com/irfanhanif/swtpro-intv/entity"
 )
 
 // MockRepositoryInterface is a mock of RepositoryInterface interface.
@@ -47,4 +48,41 @@ func (m *MockRepositoryInterface) GetTestById(ctx context.Context, input GetTest
 func (mr *MockRepositoryInterfaceMockRecorder) GetTestById(ctx, input interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTestById", reflect.TypeOf((*MockRepositoryInterface)(nil).GetTestById), ctx, input)
+}
+
+// MockICreateNewUser is a mock of ICreateNewUser interface.
+type MockICreateNewUser struct {
+	ctrl     *gomock.Controller
+	recorder *MockICreateNewUserMockRecorder
+}
+
+// MockICreateNewUserMockRecorder is the mock recorder for MockICreateNewUser.
+type MockICreateNewUserMockRecorder struct {
+	mock *MockICreateNewUser
+}
+
+// NewMockICreateNewUser creates a new mock instance.
+func NewMockICreateNewUser(ctrl *gomock.Controller) *MockICreateNewUser {
+	mock := &MockICreateNewUser{ctrl: ctrl}
+	mock.recorder = &MockICreateNewUserMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockICreateNewUser) EXPECT() *MockICreateNewUserMockRecorder {
+	return m.recorder
+}
+
+// CreateNewUser mocks base method.
+func (m *MockICreateNewUser) CreateNewUser(ctx context.Context, user entity.IUser) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateNewUser", ctx, user)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateNewUser indicates an expected call of CreateNewUser.
+func (mr *MockICreateNewUserMockRecorder) CreateNewUser(ctx, user interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewUser", reflect.TypeOf((*MockICreateNewUser)(nil).CreateNewUser), ctx, user)
 }

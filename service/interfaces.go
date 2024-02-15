@@ -30,3 +30,10 @@ func (fe *ErrFields) Error() string {
 type IRegisterNewUser interface {
 	RegisterNewUser(ctx context.Context, newUser NewUser) (uuid.UUID, error)
 }
+
+var ErrLoginFailed = errors.New("login failed")
+
+// Returns ErrLoginFailed when login attempt is not allowed
+type IGenerateToken interface {
+	GenerateToken(ctx context.Context, phoneNumber, password string) (string, uuid.UUID, error)
+}

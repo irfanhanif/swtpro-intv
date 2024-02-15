@@ -50,3 +50,42 @@ func (mr *MockIRegisterNewUserMockRecorder) RegisterNewUser(ctx, newUser interfa
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterNewUser", reflect.TypeOf((*MockIRegisterNewUser)(nil).RegisterNewUser), ctx, newUser)
 }
+
+// MockIGenerateToken is a mock of IGenerateToken interface.
+type MockIGenerateToken struct {
+	ctrl     *gomock.Controller
+	recorder *MockIGenerateTokenMockRecorder
+}
+
+// MockIGenerateTokenMockRecorder is the mock recorder for MockIGenerateToken.
+type MockIGenerateTokenMockRecorder struct {
+	mock *MockIGenerateToken
+}
+
+// NewMockIGenerateToken creates a new mock instance.
+func NewMockIGenerateToken(ctrl *gomock.Controller) *MockIGenerateToken {
+	mock := &MockIGenerateToken{ctrl: ctrl}
+	mock.recorder = &MockIGenerateTokenMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockIGenerateToken) EXPECT() *MockIGenerateTokenMockRecorder {
+	return m.recorder
+}
+
+// GenerateToken mocks base method.
+func (m *MockIGenerateToken) GenerateToken(ctx context.Context, phoneNumber, password string) (string, uuid.UUID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GenerateToken", ctx, phoneNumber, password)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(uuid.UUID)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GenerateToken indicates an expected call of GenerateToken.
+func (mr *MockIGenerateTokenMockRecorder) GenerateToken(ctx, phoneNumber, password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateToken", reflect.TypeOf((*MockIGenerateToken)(nil).GenerateToken), ctx, phoneNumber, password)
+}

@@ -221,6 +221,9 @@ components:
 
     PostV1TokenRequest:
       type: object
+      required:
+        - phoneNumber
+        - password
       properties:
         phoneNumber:
           type: string
@@ -231,6 +234,9 @@ components:
 
     PostV1TokenResponse201:
       type: object
+      required:
+        - userID
+        - token
       properties:
         userID:
           type: string

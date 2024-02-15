@@ -82,7 +82,7 @@ func TestHandlePostV1Users(t *testing.T) {
 			},
 			wantErr: nil,
 		},
-		"should return error " +
+		"should return nil " +
 			"with status 400 bad request " +
 			"and message body invalid" +
 			"when body request unreadable": {
