@@ -99,8 +99,67 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         404:
           description: User ID is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+    patch:
+      tags:
+        - User Profile
+      summary: Update profile of a user
+      description: Use this api to update one or all data of a user profile.
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchV1UsersProfileRequest"
+      responses:
+        204:
+          description: Successfull update user profile.
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/PatchV1UsersProfileResponse400"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        404:
+          description: User ID is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        409:
+          description: Phone number is already exist.
           content:
             application/json:
               schema:
@@ -179,6 +238,28 @@ components:
         fullName:
           type: string
           example: John Doe
+
+    PatchV1UsersProfileRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          example: '+6281234567890'
+        fullName:
+          type: string
+          example: John Doe
+
+    PatchV1UsersProfileResponse400:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: string
+          example:
+            - "phoneNumber must initiated with +62"
+            - "fullName must at least 3 characters and max 60 characters"
+            - "password must at least 6 characters and max 64 characters"
 
     Error:
       type: object
