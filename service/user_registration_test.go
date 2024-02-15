@@ -127,6 +127,82 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 				},
 			}
 		},
+		"should return nil " +
+			"and error phone number conflict" +
+			"when create new user returns error phone number conflict": func(mockCtrl *gomock.Controller) test {
+			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
+			mockUserAuthentication.EXPECT().Validate().Return([]error{})
+
+			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
+			mockUserProfile.EXPECT().Validate().Return([]error{})
+			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
+
+			return test{
+				args: args{
+					newUser: NewUser{
+						FullName:    "John Doe",
+						Password:    "ThisIsAPassword1234!",
+						PhoneNumber: "+6281234567890",
+					},
+				},
+				expectNewUserAuthentication: &expectNewUserAuthentication{
+					phoneNumber: "+6281234567890",
+					password:    "ThisIsAPassword1234!",
+
+					returnUserAuthentication: mockUserAuthentication,
+				},
+				expectNewUserProfile: &expectNewUserProfile{
+					fullName: "John Doe",
+
+					returnUserProfile: mockUserProfile,
+				},
+				expectCreateNewUser: &expectCreateNewUser{
+					userAuthentication: mockUserAuthentication,
+					userProfile:        mockUserProfile,
+					returnError:        ErrPhoneNumberConflict,
+				},
+				wantUUID: uuid.Nil,
+				wantErr:  ErrPhoneNumberConflict,
+			}
+		},
+		"should return nil " +
+			"and error " +
+			"when create new user returns error": func(mockCtrl *gomock.Controller) test {
+			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
+			mockUserAuthentication.EXPECT().Validate().Return([]error{})
+
+			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
+			mockUserProfile.EXPECT().Validate().Return([]error{})
+			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
+
+			return test{
+				args: args{
+					newUser: NewUser{
+						FullName:    "John Doe",
+						Password:    "ThisIsAPassword1234!",
+						PhoneNumber: "+6281234567890",
+					},
+				},
+				expectNewUserAuthentication: &expectNewUserAuthentication{
+					phoneNumber: "+6281234567890",
+					password:    "ThisIsAPassword1234!",
+
+					returnUserAuthentication: mockUserAuthentication,
+				},
+				expectNewUserProfile: &expectNewUserProfile{
+					fullName: "John Doe",
+
+					returnUserProfile: mockUserProfile,
+				},
+				expectCreateNewUser: &expectCreateNewUser{
+					userAuthentication: mockUserAuthentication,
+					userProfile:        mockUserProfile,
+					returnError:        errors.New("some error"),
+				},
+				wantUUID: uuid.Nil,
+				wantErr:  errors.New("some error"),
+			}
+		},
 	}
 
 	for name, test := range tests {

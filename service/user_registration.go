@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/entity"
 	"github.com/irfanhanif/swtpro-intv/repository"
@@ -48,7 +49,13 @@ func (u *userRegistration) RegisterNewUser(ctx context.Context, newUser NewUser)
 		return uuid.Nil, errFields
 	}
 
-	u.repo.CreateNewUser(ctx, userAuthentication, userProfile)
+	err := u.repo.CreateNewUser(ctx, userAuthentication, userProfile)
+	if errors.Is(err, ErrPhoneNumberConflict) {
+		return uuid.Nil, ErrPhoneNumberConflict
+	}
+	if err != nil {
+		return uuid.Nil, err
+	}
 
 	return userProfile.ID(), nil
 }
