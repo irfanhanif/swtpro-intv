@@ -15,13 +15,21 @@ type userProfileFactory struct {
 	uuidGen utils.IUUID
 }
 
-func (u *userProfileFactory) NewUserProfile(fullName string) IUserProfile {
-	return nil
+func (u *userProfileFactory) NewUserProfile(
+	uuidGen utils.IUUID,
+	fullName string,
+) IUserProfile {
+	return &userProfile{
+		id:       uuidGen.New(),
+		fullName: fullName,
+	}
 }
 
 type IUserProfile interface {
 	ID() uuid.UUID
 	FullName() string
+
+	Validate() []error
 }
 
 type userProfile struct {
@@ -35,4 +43,8 @@ func (u *userProfile) ID() uuid.UUID {
 
 func (u *userProfile) FullName() string {
 	return u.fullName
+}
+
+func (u *userProfile) Validate() []error {
+	return nil
 }

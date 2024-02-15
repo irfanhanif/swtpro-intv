@@ -13,7 +13,10 @@ func NewUserAuthenticationFactory() INewUserAuthentication {
 }
 
 func (u *userAuthenticationFactory) NewUserAuthentication(phoneNumber, password string) IUserAuthentication {
-	return nil
+	return &userAuthentication{
+		phoneNumber: phoneNumber,
+		password:    password,
+	}
 }
 
 type IUserAuthentication interface {
