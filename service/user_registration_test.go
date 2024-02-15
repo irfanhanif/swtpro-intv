@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/entity"
@@ -44,11 +45,14 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 	}
 
 	tests := map[string]func(mockCtrl *gomock.Controller) test{
-		"should return an uuid" +
+		"should return an uuid " +
 			"and nil error" +
 			"when successfully create new user": func(mockCtrl *gomock.Controller) test {
 			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
+			mockUserAuthentication.EXPECT().Validate().Return([]error{})
+
 			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
+			mockUserProfile.EXPECT().Validate().Return([]error{})
 			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
 
 			return test{
@@ -77,6 +81,50 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 				},
 				wantUUID: uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84"),
 				wantErr:  nil,
+			}
+		},
+		"should return nil uuid " +
+			"and errors " +
+			"when user authentication or profilr data in invalid": func(mockCtrl *gomock.Controller) test {
+			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
+			mockUserAuthentication.EXPECT().Validate().Return([]error{
+				errors.New("phone number invalid"),
+				errors.New("password invalid"),
+			})
+
+			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
+			mockUserProfile.EXPECT().Validate().Return([]error{
+				errors.New("full name invalid"),
+			})
+			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
+
+			return test{
+				args: args{
+					newUser: NewUser{
+						FullName:    "John Doe",
+						Password:    "ThisIsAPassword1234!",
+						PhoneNumber: "+6281234567890",
+					},
+				},
+				expectNewUserAuthentication: &expectNewUserAuthentication{
+					phoneNumber: "+6281234567890",
+					password:    "ThisIsAPassword1234!",
+
+					returnUserAuthentication: mockUserAuthentication,
+				},
+				expectNewUserProfile: &expectNewUserProfile{
+					fullName: "John Doe",
+
+					returnUserProfile: mockUserProfile,
+				},
+				wantUUID: uuid.Nil,
+				wantErr: &ErrFields{
+					Errs: []string{
+						"phone number invalid",
+						"password invalid",
+						"full name invalid",
+					},
+				},
 			}
 		},
 	}
