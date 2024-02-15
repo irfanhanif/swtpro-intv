@@ -100,6 +100,24 @@ func TestHandlePostV1Users(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		"should return error " +
+			"with status 400 bad request " +
+			"and message body invalid" +
+			"when body request unmarshalable": {
+			args: args{
+				request: httptest.NewRequest("post", "/v1/users", bytes.NewReader([]byte(`blabla`))),
+			},
+			expectContextJSON: &expectContextJSON{
+				code: 400,
+				body: &generated.PostV1UsersResponse400{
+					Message: []string{
+						"failed to unmarshal",
+					},
+				},
+				returnError: nil,
+			},
+			wantErr: nil,
+		},
 	}
 
 	for name, test := range tests {

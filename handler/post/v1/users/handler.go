@@ -33,7 +33,13 @@ func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 	defer request.Body.Close()
 
 	req := &generated.PostV1UsersJSONRequestBody{}
-	json.Unmarshal(bodyBytes, req)
+	if err := json.Unmarshal(bodyBytes, req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, &generated.PostV1UsersResponse400{
+			Message: []string{
+				"failed to unmarshal",
+			},
+		})
+	}
 
 	userID, _ := h.svc.RegisterNewUser(service.NewUser{
 		PhoneNumber: req.PhoneNumber,
