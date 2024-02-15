@@ -72,6 +72,9 @@ func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 	if errors.Is(err, service.ErrPhoneNumberConflict) {
 		return ctx.JSON(http.StatusConflict, &generated.Error{Error: err.Error()})
 	}
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, &generated.Error{Error: err.Error()})
+	}
 
 	return ctx.JSON(http.StatusCreated, &generated.PostV1UsersResponse201{
 		UserID: userID.String(),

@@ -217,6 +217,36 @@ func TestHandlePostV1Users(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		"should return nil " +
+			"with status 500 internal " +
+			"when register new user returns error": {
+			args: args{
+				request: func() *http.Request {
+					req := &generated.PostV1UsersRequest{
+						PhoneNumber: "+6281234567890",
+						Password:    "ThisIsAPassword1234!",
+						FullName:    "John Doe",
+					}
+					b, _ := json.Marshal(req)
+					return httptest.NewRequest("post", "/v1/users", bytes.NewReader(b))
+				}(),
+			},
+			expectContextJSON: &expectContextJSON{
+				code:        500,
+				body:        &generated.Error{Error: "an error happened"},
+				returnError: nil,
+			},
+			expectRegisterNewUser: &expectRegisterNewUser{
+				newUser: service.NewUser{
+					PhoneNumber: "+6281234567890",
+					Password:    "ThisIsAPassword1234!",
+					FullName:    "John Doe",
+				},
+				returnUUID:  uuid.Nil,
+				returnError: errors.New("an error happened"),
+			},
+			wantErr: nil,
+		},
 	}
 
 	for name, test := range tests {
