@@ -16,6 +16,9 @@ const (
 
 	MIN_PASSWORD_CHARS = 6
 	MAX_PASSWORD_CHARS = 64
+
+	MIN_FULL_NAME_CHARS = 3
+	MAX_FULL_NAME_CHARS = 60
 )
 
 //go:generate mockgen -source=user.go -destination=mock/user.go -package=mock
@@ -88,6 +91,13 @@ func (u *user) Validate() []error {
 
 	if !u.checkPassword(u.password) {
 		errs = append(errs, errors.New("Password must have a capital letter, a number, a special character (non alpha numberic)"))
+	}
+
+	if len(u.fullName) < MIN_FULL_NAME_CHARS {
+		errs = append(errs, fmt.Errorf("Full name cannot less than %d characters", MIN_FULL_NAME_CHARS))
+	}
+	if len(u.fullName) > MAX_FULL_NAME_CHARS {
+		errs = append(errs, fmt.Errorf("Full name cannot more than %d characters", MAX_FULL_NAME_CHARS))
 	}
 
 	if len(errs) > 0 {

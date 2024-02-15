@@ -132,6 +132,30 @@ func Test_user_Validate(t *testing.T) {
 				errors.New("Password must have a capital letter, a number, a special character (non alpha numberic)"),
 			},
 		},
+		{
+			name: "should returns full name error fulle name is less than 3 characters",
+			fields: fields{
+				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
+				phoneNumber: "+6281234567890",
+				password:    "ThisIsAPassword1234!",
+				fullName:    "Jo",
+			},
+			want: []error{
+				errors.New("Full name cannot less than 3 characters"),
+			},
+		},
+		{
+			name: "should returns full name error fulle name is less than 3 characters",
+			fields: fields{
+				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
+				phoneNumber: "+6281234567890",
+				password:    "ThisIsAPassword1234!",
+				fullName:    "John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe",
+			},
+			want: []error{
+				errors.New("Full name cannot more than 60 characters"),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
