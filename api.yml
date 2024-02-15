@@ -37,13 +37,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/PostV1UsersResponse400"
+                $ref: "#/components/schemas/PostV1UsersResponse400"
         500:
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InternalServerError"
+                $ref: "#/components/schemas/Error"
 
   /v1/token:
     post:
@@ -84,7 +84,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
+            format: string
           example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
       responses:
         200:
@@ -130,7 +130,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
+            format: string
           example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
       requestBody:
         content:
@@ -145,7 +145,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/PatchV1UsersProfileResponse400"
+                $ref: "#/components/schemas/PatchV1UsersProfileResponse400"
         403:
           description: Forbidden
           content:
@@ -194,7 +194,7 @@ components:
       type: object
       properties:
         userID:
-          type: uuid
+          type: string
           example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
 
     PostV1UsersResponse400:
@@ -223,7 +223,7 @@ components:
       type: object
       properties:
         userID:
-          type: uuid
+          type: string
           example: "7e6e5b8e-007a-4bd4-bbcd-57b8e06a029d"
         token:
           type: string
