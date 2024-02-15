@@ -59,7 +59,7 @@ func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 		})
 	}
 
-	userID, err := h.svc.RegisterNewUser(service.NewUser{
+	userID, err := h.svc.RegisterNewUser(request.Context(), service.NewUser{
 		PhoneNumber: req.PhoneNumber,
 		Password:    req.Password,
 		FullName:    req.FullName,

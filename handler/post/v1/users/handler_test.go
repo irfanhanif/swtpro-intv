@@ -297,7 +297,7 @@ func TestHandlePostV1Users(t *testing.T) {
 
 			if test.expectRegisterNewUser != nil {
 				e := test.expectRegisterNewUser
-				mockRegisterNewUser.EXPECT().RegisterNewUser(e.newUser).Return(e.returnUUID, e.returnError)
+				mockRegisterNewUser.EXPECT().RegisterNewUser(gomock.Any(), e.newUser).Return(e.returnUUID, e.returnError)
 			}
 
 			h := NewHandler(mockRegisterNewUser)

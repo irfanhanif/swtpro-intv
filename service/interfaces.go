@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"github.com/google/uuid"
 	"strings"
@@ -27,5 +28,5 @@ func (fe *ErrFields) Error() string {
 // Returns ErrFields when input doesn't meed the required conditions
 // Returns ErrPhoneNumberConflict when phone number already exists
 type IRegisterNewUser interface {
-	RegisterNewUser(newUser NewUser) (uuid.UUID, error)
+	RegisterNewUser(ctx context.Context, newUser NewUser) (uuid.UUID, error)
 }
