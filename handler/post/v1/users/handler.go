@@ -58,11 +58,16 @@ func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 		})
 	}
 
-	userID, _ := h.svc.RegisterNewUser(service.NewUser{
+	userID, err := h.svc.RegisterNewUser(service.NewUser{
 		PhoneNumber: req.PhoneNumber,
 		Password:    req.Password,
 		FullName:    req.FullName,
 	})
+	if fieldErrors, ok := err.(*service.FieldErrors); ok {
+		return ctx.JSON(http.StatusBadRequest, &generated.PostV1UsersResponse400{
+			Message: fieldErrors.Errs,
+		})
+	}
 
 	return ctx.JSON(http.StatusCreated, &generated.PostV1UsersResponse201{
 		UserID: userID.String(),

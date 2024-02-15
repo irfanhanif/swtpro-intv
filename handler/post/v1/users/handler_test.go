@@ -145,6 +145,48 @@ func TestHandlePostV1Users(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		"should return nil " +
+			"with status 400 bad request " +
+			"when fields doen't meed the required conditions": {
+			args: args{
+				request: func() *http.Request {
+					req := &generated.PostV1UsersRequest{
+						PhoneNumber: "+6281234567890",
+						Password:    "ThisIsAPassword1234!",
+						FullName:    "John Doe",
+					}
+					b, _ := json.Marshal(req)
+					return httptest.NewRequest("post", "/v1/users", bytes.NewReader(b))
+				}(),
+			},
+			expectContextJSON: &expectContextJSON{
+				code: 400,
+				body: &generated.PostV1UsersResponse400{
+					Message: []string{
+						"invalid fullName",
+						"invalid password",
+						"invalid phoneNumber",
+					},
+				},
+				returnError: nil,
+			},
+			expectRegisterNewUser: &expectRegisterNewUser{
+				newUser: service.NewUser{
+					PhoneNumber: "+6281234567890",
+					Password:    "ThisIsAPassword1234!",
+					FullName:    "John Doe",
+				},
+				returnUUID: uuid.Nil,
+				returnError: &service.FieldErrors{
+					Errs: []string{
+						"invalid fullName",
+						"invalid password",
+						"invalid phoneNumber",
+					},
+				},
+			},
+			wantErr: nil,
+		},
 	}
 
 	for name, test := range tests {
