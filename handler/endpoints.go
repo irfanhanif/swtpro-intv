@@ -18,7 +18,7 @@ func (s *Server) PostV1Users(ctx echo.Context) error {
 }
 
 func (s *Server) PostV1Token(ctx echo.Context) error {
-	return nil
+	return s.PostV1TokenHandler.HandlePostV1Token(ctx)
 }
 
 func (s *Server) GetV1UsersUserIDProfile(ctx echo.Context, userID string) error {

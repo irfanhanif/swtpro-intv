@@ -49,6 +49,20 @@ func (mr *MockINewUserMockRecorder) NewUser(phoneNumber, password, fullName inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewUser", reflect.TypeOf((*MockINewUser)(nil).NewUser), phoneNumber, password, fullName)
 }
 
+// NewUserWithID mocks base method.
+func (m *MockINewUser) NewUserWithID(id uuid.UUID, phoneNumber, password, fullName string) entity.IUser {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NewUserWithID", id, phoneNumber, password, fullName)
+	ret0, _ := ret[0].(entity.IUser)
+	return ret0
+}
+
+// NewUserWithID indicates an expected call of NewUserWithID.
+func (mr *MockINewUserMockRecorder) NewUserWithID(id, phoneNumber, password, fullName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewUserWithID", reflect.TypeOf((*MockINewUser)(nil).NewUserWithID), id, phoneNumber, password, fullName)
+}
+
 // MockIUser is a mock of IUser interface.
 type MockIUser struct {
 	ctrl     *gomock.Controller

@@ -7,5 +7,5 @@ type IHandlePostV1Users interface {
 }
 
 type IHandlePostV1Token interface {
-	IHandlePostV1Token(ctx context.IContext) error
+	HandlePostV1Token(ctx context.IContext) error
 }

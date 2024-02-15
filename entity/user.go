@@ -26,6 +26,7 @@ const (
 
 type INewUser interface {
 	NewUser(phoneNumber, password, fullName string) IUser
+	NewUserWithID(id uuid.UUID, phoneNumber, password, fullName string) IUser
 }
 
 type userFactory struct {
@@ -35,6 +36,15 @@ type userFactory struct {
 func (u *userFactory) NewUser(phoneNumber, password, fullName string) IUser {
 	return &user{
 		id:          u.uuid.New(),
+		phoneNumber: phoneNumber,
+		password:    password,
+		fullName:    fullName,
+	}
+}
+
+func (u *userFactory) NewUserWithID(id uuid.UUID, phoneNumber, password, fullName string) IUser {
+	return &user{
+		id:          id,
 		phoneNumber: phoneNumber,
 		password:    password,
 		fullName:    fullName,

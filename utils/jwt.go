@@ -1,6 +1,11 @@
 package utils
 
-import "github.com/google/uuid"
+import (
+	"fmt"
+	jwtLib "github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	"time"
+)
 
 //go:generate mockgen -source=jwt.go -destination=mock/jwt.go -package=mock
 
@@ -9,13 +14,24 @@ type IGenerateJWT interface {
 }
 
 type jwt struct {
-	secretKey string
+	secretKey []byte
 }
 
-func NewJWT(secretKey string) *jwt {
+func NewJWT(secretKey []byte) *jwt {
 	return &jwt{secretKey: secretKey}
 }
 
 func (j *jwt) GenerateJWT(userID uuid.UUID) (string, error) {
-	return "", nil
+	key, err := jwtLib.ParseRSAPrivateKeyFromPEM(j.secretKey)
+	if err != nil {
+		fmt.Println("errors di sini ta?", err)
+		return "", err
+	}
+
+	token := jwtLib.NewWithClaims(jwtLib.SigningMethodRS256, jwtLib.MapClaims{
+		"userID": userID.String(),
+		"exp":    time.Now().Add(time.Hour * 24).Unix(),
+	})
+
+	return token.SignedString(key)
 }
