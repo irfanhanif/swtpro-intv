@@ -6,11 +6,13 @@ import (
 	"github.com/google/uuid"
 	mockUtils "github.com/irfanhanif/swtpro-intv/utils/mock"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/crypto/bcrypt"
 	"testing"
 )
 
 func TestUserAttributes(t *testing.T) {
 	phoneNumber := "+6281234567890"
+	//hashedPassword := "$2a$10$kXxzCBr.T7mJzHFTjJnbd.Ww9uQQq.SO/3/3dCSdfguFw91d7Rd1."
 	password := "ThisIsAPassword1234!"
 	fullName := "John Doe"
 
@@ -22,6 +24,7 @@ func TestUserAttributes(t *testing.T) {
 
 	assert.Equal(t, phoneNumber, user.PhoneNumber())
 	assert.Equal(t, password, user.Password())
+	assert.Nil(t, bcrypt.CompareHashAndPassword([]byte(user.HashedPassword()), []byte(password)))
 	assert.Equal(t, fullName, user.FullName())
 }
 

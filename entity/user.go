@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/utils"
+	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"unicode"
 )
@@ -74,7 +75,8 @@ func (u *user) Password() string {
 }
 
 func (u *user) HashedPassword() string {
-	return u.password
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(u.password), 10)
+	return string(bytes)
 }
 
 func (u *user) FullName() string {
