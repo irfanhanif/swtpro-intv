@@ -41,7 +41,7 @@ func Test_user_Validate(t *testing.T) {
 			name: "should returns no error when all attributes are valid",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890",
+				phoneNumber: "+628123456789",
 				password:    "ThisIsAPassword1234!",
 				fullName:    "John Doe",
 			},
@@ -51,7 +51,7 @@ func Test_user_Validate(t *testing.T) {
 			name: "should returns phone number error when it is not has +62 prefix",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6981234567890",
+				phoneNumber: "+698123456789",
 				password:    "ThisIsAPassword1234!",
 				fullName:    "John Doe",
 			},
@@ -60,35 +60,34 @@ func Test_user_Validate(t *testing.T) {
 			},
 		},
 		{
-			name: "should returns phone number error when char is less than 3",
+			name: "should returns phone number error when char is less than 10",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6",
+				phoneNumber: "+62812345",
 				password:    "ThisIsAPassword1234!",
 				fullName:    "John Doe",
 			},
 			want: []error{
-				errors.New("Phone Number must minimum has 3 characters"),
-				errors.New("Phone Number must has +62 as a prefix"),
+				errors.New("Phone Number must minimum has 10 characters"),
 			},
 		},
 		{
 			name: "should returns phone number error when char is greater than 60",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890+6981234567890+6981234567890+6981234567890+6981234567890+6981234567890",
+				phoneNumber: "+6281234567890",
 				password:    "ThisIsAPassword1234!",
 				fullName:    "John Doe",
 			},
 			want: []error{
-				errors.New("Phone Number must maximum has 60 characters"),
+				errors.New("Phone Number must maximum has 13 characters"),
 			},
 		},
 		{
 			name: "should returns password errors no uppercase letter",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890",
+				phoneNumber: "+628123456789",
 				password:    "thisisapassword1234!",
 				fullName:    "John Doe",
 			},
@@ -100,7 +99,7 @@ func Test_user_Validate(t *testing.T) {
 			name: "should returns password errors no lowercase letter",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890",
+				phoneNumber: "+628123456789",
 				password:    "THISISAPASSWORD1234!",
 				fullName:    "John Doe",
 			},
@@ -112,7 +111,7 @@ func Test_user_Validate(t *testing.T) {
 			name: "should returns password errors no numeric letter",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890",
+				phoneNumber: "+628123456789",
 				password:    "ThisIsAPassword!",
 				fullName:    "John Doe",
 			},
@@ -124,7 +123,7 @@ func Test_user_Validate(t *testing.T) {
 			name: "should returns password errors no special character",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890",
+				phoneNumber: "+628123456789",
 				password:    "ThisIsAPassword1234",
 				fullName:    "John Doe",
 			},
@@ -136,7 +135,7 @@ func Test_user_Validate(t *testing.T) {
 			name: "should returns full name error fulle name is less than 3 characters",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890",
+				phoneNumber: "+628123456789",
 				password:    "ThisIsAPassword1234!",
 				fullName:    "Jo",
 			},
@@ -148,7 +147,7 @@ func Test_user_Validate(t *testing.T) {
 			name: "should returns full name error fulle name is less than 3 characters",
 			fields: fields{
 				id:          uuid.MustParse("7ef62378-e51c-4d02-ba8b-b98a8a1375a9"),
-				phoneNumber: "+6281234567890",
+				phoneNumber: "+628123456789",
 				password:    "ThisIsAPassword1234!",
 				fullName:    "John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe",
 			},
