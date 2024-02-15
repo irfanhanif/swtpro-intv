@@ -41,6 +41,23 @@ func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
 		})
 	}
 
+	var errs []string
+	if req.FullName == "" {
+		errs = append(errs, "fullName cannot empty")
+	}
+	if req.Password == "" {
+		errs = append(errs, "password cannot empty")
+	}
+	if req.PhoneNumber == "" {
+		errs = append(errs, "phoneNumber cannot empty")
+	}
+
+	if len(errs) > 0 {
+		return ctx.JSON(http.StatusBadRequest, &generated.PostV1UsersResponse400{
+			Message: errs,
+		})
+	}
+
 	userID, _ := h.svc.RegisterNewUser(service.NewUser{
 		PhoneNumber: req.PhoneNumber,
 		Password:    req.Password,

@@ -118,6 +118,33 @@ func TestHandlePostV1Users(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		"should return nil " +
+			"with status 400 bad request " +
+			"when required fields are empty": {
+			args: args{
+				request: func() *http.Request {
+					req := &generated.PostV1UsersRequest{
+						FullName:    "",
+						Password:    "",
+						PhoneNumber: "",
+					}
+					b, _ := json.Marshal(req)
+					return httptest.NewRequest("post", "/v1/users", bytes.NewReader(b))
+				}(),
+			},
+			expectContextJSON: &expectContextJSON{
+				code: 400,
+				body: &generated.PostV1UsersResponse400{
+					Message: []string{
+						"fullName cannot empty",
+						"password cannot empty",
+						"phoneNumber cannot empty",
+					},
+				},
+				returnError: nil,
+			},
+			wantErr: nil,
+		},
 	}
 
 	for name, test := range tests {
