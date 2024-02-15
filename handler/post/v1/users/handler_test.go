@@ -247,6 +247,37 @@ func TestHandlePostV1Users(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		"should return error from contest json response " +
+			"contest JSON() returns error": {
+			args: args{
+				request: func() *http.Request {
+					req := &generated.PostV1UsersRequest{
+						FullName:    "John Doe",
+						Password:    "ThisIsAPassword1234!",
+						PhoneNumber: "+6281234567890",
+					}
+					b, _ := json.Marshal(req)
+					return httptest.NewRequest("post", "/v1/users", bytes.NewReader(b))
+				}(),
+			},
+			expectContextJSON: &expectContextJSON{
+				code: 201,
+				body: &generated.PostV1UsersResponse201{
+					UserID: "ce29af20-aa68-4ca5-8ef4-f1199704507b",
+				},
+				returnError: errors.New("something bad happened"),
+			},
+			expectRegisterNewUser: &expectRegisterNewUser{
+				newUser: service.NewUser{
+					PhoneNumber: "+6281234567890",
+					Password:    "ThisIsAPassword1234!",
+					FullName:    "John Doe",
+				},
+				returnUUID:  uuid.MustParse("ce29af20-aa68-4ca5-8ef4-f1199704507b"),
+				returnError: nil,
+			},
+			wantErr: errors.New("something bad happened"),
+		},
 	}
 
 	for name, test := range tests {
