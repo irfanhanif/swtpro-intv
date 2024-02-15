@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"github.com/irfanhanif/swtpro-intv/entity"
+	"github.com/lib/pq"
 )
 
 func (r *Repository) GetTestById(ctx context.Context, input GetTestByIdInput) (output GetTestByIdOutput, err error) {
@@ -21,6 +22,10 @@ func (r *Repository) CreateNewUser(ctx context.Context, user entity.IUser) error
 		user.HashedPassword(),
 		user.FullName(),
 	)
+	pqErr, ok := err.(*pq.Error)
+	if ok && pqErr.Code == "23505" && pqErr.Constraint == "user_phone_number_unique" {
+		return ErrPhoneNumberConflict
+	}
 	if err != nil {
 		return err
 	}

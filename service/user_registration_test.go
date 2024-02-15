@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/entity"
 	mockEntity "github.com/irfanhanif/swtpro-intv/entity/mock"
+	"github.com/irfanhanif/swtpro-intv/repository"
 	mockRepository "github.com/irfanhanif/swtpro-intv/repository/mock"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -129,7 +130,7 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 				},
 				expectCreateNewUser: &expectCreateNewUser{
 					user:        mockUser,
-					returnError: ErrPhoneNumberConflict,
+					returnError: repository.ErrPhoneNumberConflict,
 				},
 				wantUUID: uuid.Nil,
 				wantErr:  ErrPhoneNumberConflict,

@@ -86,6 +86,20 @@ func (mr *MockIUserMockRecorder) FullName() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FullName", reflect.TypeOf((*MockIUser)(nil).FullName))
 }
 
+// HashedPassword mocks base method.
+func (m *MockIUser) HashedPassword() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HashedPassword")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// HashedPassword indicates an expected call of HashedPassword.
+func (mr *MockIUserMockRecorder) HashedPassword() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HashedPassword", reflect.TypeOf((*MockIUser)(nil).HashedPassword))
+}
+
 // ID mocks base method.
 func (m *MockIUser) ID() uuid.UUID {
 	m.ctrl.T.Helper()

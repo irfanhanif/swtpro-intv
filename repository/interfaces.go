@@ -6,6 +6,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"github.com/irfanhanif/swtpro-intv/entity"
 )
 
@@ -14,6 +15,8 @@ import (
 type RepositoryInterface interface {
 	GetTestById(ctx context.Context, input GetTestByIdInput) (output GetTestByIdOutput, err error)
 }
+
+var ErrPhoneNumberConflict = errors.New("given phone number already exists")
 
 type ICreateNewUser interface {
 	CreateNewUser(ctx context.Context, user entity.IUser) error
