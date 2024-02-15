@@ -16,5 +16,5 @@ type RepositoryInterface interface {
 }
 
 type ICreateNewUser interface {
-	CreateNewUser(ctx context.Context, ua entity.IUserAuthentication, up entity.IUserProfile) error
+	CreateNewUser(ctx context.Context, user entity.IUser) error
 }

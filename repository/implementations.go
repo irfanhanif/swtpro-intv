@@ -13,34 +13,6 @@ func (r *Repository) GetTestById(ctx context.Context, input GetTestByIdInput) (o
 	return
 }
 
-func (r *Repository) CreateNewUser(ctx context.Context, ua entity.IUserAuthentication, up entity.IUserProfile) error {
-	tx, err := r.Db.BeginTx(ctx, nil)
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	query1 := `insert into user_profile (id, full_name) values($1, $2)`
-	_, err = tx.Exec(query1,
-		up.ID(),
-		up.FullName(),
-	)
-	if err != nil {
-		return err
-	}
-
-	query2 := `insert into user_authentication (id, user_id, phone_number, password) values ($1, $2, $3, $4)`
-	_, err = tx.Exec(query2,
-		up.ID(),
-		up.FullName(),
-	)
-	if err != nil {
-		return err
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
+func (r *Repository) CreateNewUser(ctx context.Context, user entity.IUser) error {
 	return nil
 }

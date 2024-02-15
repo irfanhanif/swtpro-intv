@@ -16,29 +16,23 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 	type args struct {
 		newUser NewUser
 	}
-	type expectNewUserAuthentication struct {
+	type expectNewUser struct {
 		phoneNumber string
 		password    string
+		fullName    string
 
-		returnUserAuthentication entity.IUserAuthentication
-	}
-	type expectNewUserProfile struct {
-		fullName string
-
-		returnUserProfile entity.IUserProfile
+		returnUser entity.IUser
 	}
 	type expectCreateNewUser struct {
-		userAuthentication entity.IUserAuthentication
-		userProfile        entity.IUserProfile
+		user entity.IUser
 
 		returnError error
 	}
 	type test struct {
 		args args
 
-		expectNewUserAuthentication *expectNewUserAuthentication
-		expectNewUserProfile        *expectNewUserProfile
-		expectCreateNewUser         *expectCreateNewUser
+		expectNewUser       *expectNewUser
+		expectCreateNewUser *expectCreateNewUser
 
 		wantUUID uuid.UUID
 		wantErr  error
@@ -48,12 +42,9 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 		"should return an uuid " +
 			"and nil error" +
 			"when successfully create new user": func(mockCtrl *gomock.Controller) test {
-			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
-			mockUserAuthentication.EXPECT().Validate().Return([]error{})
-
-			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
-			mockUserProfile.EXPECT().Validate().Return([]error{})
-			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
+			mockUser := mockEntity.NewMockIUser(mockCtrl)
+			mockUser.EXPECT().Validate().Return(nil)
+			mockUser.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
 
 			return test{
 				args: args{
@@ -63,21 +54,16 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 						PhoneNumber: "+6281234567890",
 					},
 				},
-				expectNewUserAuthentication: &expectNewUserAuthentication{
+				expectNewUser: &expectNewUser{
 					phoneNumber: "+6281234567890",
 					password:    "ThisIsAPassword1234!",
+					fullName:    "John Doe",
 
-					returnUserAuthentication: mockUserAuthentication,
-				},
-				expectNewUserProfile: &expectNewUserProfile{
-					fullName: "John Doe",
-
-					returnUserProfile: mockUserProfile,
+					returnUser: mockUser,
 				},
 				expectCreateNewUser: &expectCreateNewUser{
-					userAuthentication: mockUserAuthentication,
-					userProfile:        mockUserProfile,
-					returnError:        nil,
+					user:        mockUser,
+					returnError: nil,
 				},
 				wantUUID: uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84"),
 				wantErr:  nil,
@@ -86,17 +72,13 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 		"should return nil uuid " +
 			"and errors " +
 			"when user authentication or profilr data in invalid": func(mockCtrl *gomock.Controller) test {
-			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
-			mockUserAuthentication.EXPECT().Validate().Return([]error{
+			mockUser := mockEntity.NewMockIUser(mockCtrl)
+			mockUser.EXPECT().Validate().Return([]error{
 				errors.New("phone number invalid"),
 				errors.New("password invalid"),
-			})
-
-			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
-			mockUserProfile.EXPECT().Validate().Return([]error{
 				errors.New("full name invalid"),
 			})
-			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
+			mockUser.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
 
 			return test{
 				args: args{
@@ -106,16 +88,12 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 						PhoneNumber: "+6281234567890",
 					},
 				},
-				expectNewUserAuthentication: &expectNewUserAuthentication{
+				expectNewUser: &expectNewUser{
 					phoneNumber: "+6281234567890",
 					password:    "ThisIsAPassword1234!",
+					fullName:    "John Doe",
 
-					returnUserAuthentication: mockUserAuthentication,
-				},
-				expectNewUserProfile: &expectNewUserProfile{
-					fullName: "John Doe",
-
-					returnUserProfile: mockUserProfile,
+					returnUser: mockUser,
 				},
 				wantUUID: uuid.Nil,
 				wantErr: &ErrFields{
@@ -128,14 +106,11 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 			}
 		},
 		"should return nil " +
-			"and error phone number conflict" +
+			"and error phone number conflict " +
 			"when create new user returns error phone number conflict": func(mockCtrl *gomock.Controller) test {
-			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
-			mockUserAuthentication.EXPECT().Validate().Return([]error{})
-
-			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
-			mockUserProfile.EXPECT().Validate().Return([]error{})
-			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
+			mockUser := mockEntity.NewMockIUser(mockCtrl)
+			mockUser.EXPECT().Validate().Return(nil)
+			mockUser.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
 
 			return test{
 				args: args{
@@ -145,21 +120,16 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 						PhoneNumber: "+6281234567890",
 					},
 				},
-				expectNewUserAuthentication: &expectNewUserAuthentication{
+				expectNewUser: &expectNewUser{
 					phoneNumber: "+6281234567890",
 					password:    "ThisIsAPassword1234!",
+					fullName:    "John Doe",
 
-					returnUserAuthentication: mockUserAuthentication,
-				},
-				expectNewUserProfile: &expectNewUserProfile{
-					fullName: "John Doe",
-
-					returnUserProfile: mockUserProfile,
+					returnUser: mockUser,
 				},
 				expectCreateNewUser: &expectCreateNewUser{
-					userAuthentication: mockUserAuthentication,
-					userProfile:        mockUserProfile,
-					returnError:        ErrPhoneNumberConflict,
+					user:        mockUser,
+					returnError: ErrPhoneNumberConflict,
 				},
 				wantUUID: uuid.Nil,
 				wantErr:  ErrPhoneNumberConflict,
@@ -168,12 +138,9 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 		"should return nil " +
 			"and error " +
 			"when create new user returns error": func(mockCtrl *gomock.Controller) test {
-			mockUserAuthentication := mockEntity.NewMockIUserAuthentication(mockCtrl)
-			mockUserAuthentication.EXPECT().Validate().Return([]error{})
-
-			mockUserProfile := mockEntity.NewMockIUserProfile(mockCtrl)
-			mockUserProfile.EXPECT().Validate().Return([]error{})
-			mockUserProfile.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
+			mockUser := mockEntity.NewMockIUser(mockCtrl)
+			mockUser.EXPECT().Validate().Return(nil)
+			mockUser.EXPECT().ID().Return(uuid.MustParse("bd2027f3-1a36-4c18-8e12-a9f78ddbfa84")).AnyTimes()
 
 			return test{
 				args: args{
@@ -183,21 +150,16 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 						PhoneNumber: "+6281234567890",
 					},
 				},
-				expectNewUserAuthentication: &expectNewUserAuthentication{
+				expectNewUser: &expectNewUser{
 					phoneNumber: "+6281234567890",
 					password:    "ThisIsAPassword1234!",
+					fullName:    "John Doe",
 
-					returnUserAuthentication: mockUserAuthentication,
-				},
-				expectNewUserProfile: &expectNewUserProfile{
-					fullName: "John Doe",
-
-					returnUserProfile: mockUserProfile,
+					returnUser: mockUser,
 				},
 				expectCreateNewUser: &expectCreateNewUser{
-					userAuthentication: mockUserAuthentication,
-					userProfile:        mockUserProfile,
-					returnError:        errors.New("some error"),
+					user:        mockUser,
+					returnError: errors.New("some error"),
 				},
 				wantUUID: uuid.Nil,
 				wantErr:  errors.New("some error"),
@@ -208,28 +170,22 @@ func Test_userRegistration_RegisterNewUser(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			mockCtrl := gomock.NewController(t)
-			mockNewUserAuthentication := mockEntity.NewMockINewUserAuthentication(mockCtrl)
-			mockNewUserProfile := mockEntity.NewMockINewUserProfile(mockCtrl)
 			mockCreateNewUser := mockRepository.NewMockICreateNewUser(mockCtrl)
+			mockNewUser := mockEntity.NewMockINewUser(mockCtrl)
 
 			tt := test(mockCtrl)
 
-			if tt.expectNewUserAuthentication != nil {
-				e := tt.expectNewUserAuthentication
-				mockNewUserAuthentication.EXPECT().NewUserAuthentication(e.phoneNumber, e.password).Return(e.returnUserAuthentication)
-			}
-
-			if tt.expectNewUserProfile != nil {
-				e := tt.expectNewUserProfile
-				mockNewUserProfile.EXPECT().NewUserProfile(e.fullName).Return(e.returnUserProfile)
+			if tt.expectNewUser != nil {
+				e := tt.expectNewUser
+				mockNewUser.EXPECT().NewUser(e.phoneNumber, e.password, e.fullName).Return(e.returnUser)
 			}
 
 			if tt.expectCreateNewUser != nil {
 				e := tt.expectCreateNewUser
-				mockCreateNewUser.EXPECT().CreateNewUser(gomock.Any(), e.userAuthentication, e.userProfile).Return(e.returnError)
+				mockCreateNewUser.EXPECT().CreateNewUser(gomock.Any(), e.user).Return(e.returnError)
 			}
 
-			s := NewUserRegistration(mockNewUserAuthentication, mockNewUserProfile, mockCreateNewUser)
+			s := NewUserRegistration(mockNewUser, mockCreateNewUser)
 			userID, actualErr := s.RegisterNewUser(context.Background(), tt.args.newUser)
 
 			assert.Equal(t, tt.wantUUID, userID)

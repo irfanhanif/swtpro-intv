@@ -9,32 +9,18 @@ import (
 )
 
 type userRegistration struct {
-	userAuthenticationFactory entity.INewUserAuthentication
-	userProfileFactory        entity.INewUserProfile
-	repo                      repository.ICreateNewUser
+	userFactory entity.INewUser
+	repo        repository.ICreateNewUser
 }
 
-func NewUserRegistration(
-	userAuthenticationFactory entity.INewUserAuthentication,
-	userProfileFactory entity.INewUserProfile,
-	repo repository.ICreateNewUser,
-) *userRegistration {
+func NewUserRegistration(userFactory entity.INewUser, repo repository.ICreateNewUser) *userRegistration {
 	return &userRegistration{
-		userAuthenticationFactory: userAuthenticationFactory,
-		userProfileFactory:        userProfileFactory,
-		repo:                      repo,
+		userFactory: userFactory,
+		repo:        repo,
 	}
 }
 
 func (u *userRegistration) RegisterNewUser(ctx context.Context, newUser NewUser) (uuid.UUID, error) {
-	var errs []error
-
-	userAuthentication := u.userAuthenticationFactory.NewUserAuthentication(newUser.PhoneNumber, newUser.Password)
-	errs = append(errs, userAuthentication.Validate()...)
-
-	userProfile := u.userProfileFactory.NewUserProfile(newUser.FullName)
-	errs = append(errs, userProfile.Validate()...)
-
 	errorsToStrings := func(errs []error) []string {
 		result := []string{}
 		for _, err := range errs {
@@ -43,13 +29,14 @@ func (u *userRegistration) RegisterNewUser(ctx context.Context, newUser NewUser)
 		return result
 	}
 
-	errFields := &ErrFields{Errs: []string{}}
-	if len(errs) > 0 {
+	user := u.userFactory.NewUser(newUser.PhoneNumber, newUser.Password, newUser.FullName)
+	if errs := user.Validate(); errs != nil {
+		errFields := &ErrFields{Errs: []string{}}
 		errFields.Errs = errorsToStrings(errs)
 		return uuid.Nil, errFields
 	}
 
-	err := u.repo.CreateNewUser(ctx, userAuthentication, userProfile)
+	err := u.repo.CreateNewUser(ctx, user)
 	if errors.Is(err, ErrPhoneNumberConflict) {
 		return uuid.Nil, ErrPhoneNumberConflict
 	}
@@ -57,5 +44,5 @@ func (u *userRegistration) RegisterNewUser(ctx context.Context, newUser NewUser)
 		return uuid.Nil, err
 	}
 
-	return userProfile.ID(), nil
+	return user.ID(), nil
 }
