@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/SawitProRecruitment/UserService/generated"
-	"github.com/SawitProRecruitment/UserService/handler"
-	"github.com/SawitProRecruitment/UserService/repository"
+	"github.com/irfanhanif/swtpro-intv/generated"
+	"github.com/irfanhanif/swtpro-intv/handler"
+	"github.com/irfanhanif/swtpro-intv/repository"
 
 	"github.com/labstack/echo/v4"
 )

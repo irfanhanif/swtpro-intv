@@ -14,7 +14,7 @@ import (
 //}
 
 func (s *Server) PostV1Users(ctx echo.Context) error {
-	return nil
+	return s.postV1UsersHandler.HandlePostV1Users(ctx)
 }
 
 func (s *Server) PostV1Token(ctx echo.Context) error {

@@ -192,6 +192,8 @@ components:
 
     PostV1UsersResponse201:
       type: object
+      required:
+        - userID
       properties:
         userID:
           type: string

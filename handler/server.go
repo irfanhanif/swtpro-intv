@@ -1,11 +1,13 @@
 package handler
 
 import (
-	"github.com/SawitProRecruitment/UserService/repository"
+	"github.com/irfanhanif/swtpro-intv/repository"
 )
 
 type Server struct {
 	Repository repository.RepositoryInterface
+
+	postV1UsersHandler IHandlePostV1Users
 }
 
 type NewServerOptions struct {
