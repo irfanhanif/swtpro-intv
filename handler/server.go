@@ -5,9 +5,7 @@ import (
 )
 
 type Server struct {
-	Repository repository.RepositoryInterface
-
-	postV1UsersHandler IHandlePostV1Users
+	PostV1UsersHandler IHandlePostV1Users
 }
 
 type NewServerOptions struct {

@@ -15,5 +15,5 @@ func NewUUID() *UUID {
 }
 
 func (u *UUID) New() uuid.UUID {
-	return u.New()
+	return uuid.New()
 }

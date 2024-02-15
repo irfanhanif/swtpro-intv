@@ -48,6 +48,7 @@ type IUser interface {
 	ID() uuid.UUID
 	PhoneNumber() string
 	Password() string
+	HashedPassword() string
 	FullName() string
 
 	Validate() []error
@@ -69,6 +70,10 @@ func (u *user) PhoneNumber() string {
 }
 
 func (u *user) Password() string {
+	return u.password
+}
+
+func (u *user) HashedPassword() string {
 	return u.password
 }
 

@@ -14,5 +14,16 @@ func (r *Repository) GetTestById(ctx context.Context, input GetTestByIdInput) (o
 }
 
 func (r *Repository) CreateNewUser(ctx context.Context, user entity.IUser) error {
+	query := `insert into "user" (id, phone_number, password, full_name) values ($1, $2, $3, $4)`
+	_, err := r.Db.Exec(query,
+		user.ID(),
+		user.PhoneNumber(),
+		user.HashedPassword(),
+		user.FullName(),
+	)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

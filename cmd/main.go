@@ -1,6 +1,9 @@
 package main
 
 import (
+	"github.com/irfanhanif/swtpro-intv/entity"
+	"github.com/irfanhanif/swtpro-intv/service"
+	"github.com/irfanhanif/swtpro-intv/utils"
 	"os"
 
 	"github.com/irfanhanif/swtpro-intv/generated"
@@ -8,6 +11,8 @@ import (
 	"github.com/irfanhanif/swtpro-intv/repository"
 
 	"github.com/labstack/echo/v4"
+
+	postV1Users "github.com/irfanhanif/swtpro-intv/handler/post/v1/users"
 )
 
 func main() {
@@ -21,11 +26,17 @@ func main() {
 
 func newServer() *handler.Server {
 	dbDsn := os.Getenv("DATABASE_URL")
-	var repo repository.RepositoryInterface = repository.NewRepository(repository.NewRepositoryOptions{
-		Dsn: dbDsn,
-	})
-	opts := handler.NewServerOptions{
-		Repository: repo,
+	repo := repository.NewRepository(repository.NewRepositoryOptions{Dsn: dbDsn})
+
+	uuid := utils.NewUUID()
+
+	userEntityFactory := entity.NewUserFactory(uuid)
+
+	userRegistrationService := service.NewUserRegistration(userEntityFactory, repo)
+
+	postV1UsersHandler := postV1Users.NewHandler(userRegistrationService)
+
+	return &handler.Server{
+		PostV1UsersHandler: postV1UsersHandler,
 	}
-	return handler.NewServer(opts)
 }
