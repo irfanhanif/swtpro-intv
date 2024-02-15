@@ -5,6 +5,7 @@
 package mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -36,16 +37,16 @@ func (m *MockIRegisterNewUser) EXPECT() *MockIRegisterNewUserMockRecorder {
 }
 
 // RegisterNewUser mocks base method.
-func (m *MockIRegisterNewUser) RegisterNewUser(newUser service.NewUser) (uuid.UUID, error) {
+func (m *MockIRegisterNewUser) RegisterNewUser(ctx context.Context, newUser service.NewUser) (uuid.UUID, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterNewUser", newUser)
+	ret := m.ctrl.Call(m, "RegisterNewUser", ctx, newUser)
 	ret0, _ := ret[0].(uuid.UUID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // RegisterNewUser indicates an expected call of RegisterNewUser.
-func (mr *MockIRegisterNewUserMockRecorder) RegisterNewUser(newUser interface{}) *gomock.Call {
+func (mr *MockIRegisterNewUserMockRecorder) RegisterNewUser(ctx, newUser interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterNewUser", reflect.TypeOf((*MockIRegisterNewUser)(nil).RegisterNewUser), newUser)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterNewUser", reflect.TypeOf((*MockIRegisterNewUser)(nil).RegisterNewUser), ctx, newUser)
 }

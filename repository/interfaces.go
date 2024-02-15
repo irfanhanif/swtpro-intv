@@ -4,8 +4,17 @@
 // interfaces using mockgen. See the Makefile for more information.
 package repository
 
-import "context"
+import (
+	"context"
+	"github.com/irfanhanif/swtpro-intv/entity"
+)
+
+//go:generate mockgen -source=interfaces.go -destination=mock/interfaces.go -package=mock
 
 type RepositoryInterface interface {
 	GetTestById(ctx context.Context, input GetTestByIdInput) (output GetTestByIdOutput, err error)
+}
+
+type ICreateNewUser interface {
+	CreateNewUser(ctx context.Context, ua entity.IUserAuthentication, up entity.IUserProfile) error
 }
