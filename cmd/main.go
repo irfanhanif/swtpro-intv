@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/irfanhanif/swtpro-intv/entity"
 	"github.com/irfanhanif/swtpro-intv/service"
 	"github.com/irfanhanif/swtpro-intv/utils"
@@ -29,14 +30,28 @@ func main() {
 }
 
 func newServer() *handler.Server {
-	jwtPrivateKey, err := ioutil.ReadFile("cert/jwtRS256.key")
+	jwtPrivateKey, err := ioutil.ReadFile("./cert/jwtRS256.key")
+	if err != nil {
+		fmt.Println("jwt private not found in local")
+	}
+
+	jwtPublicKey, err := ioutil.ReadFile("./cert/jwtRS256.key.pub")
+	if err != nil {
+		fmt.Println("jwt public key not found in local")
+	}
+
+	jwtPrivateKey, err = ioutil.ReadFile("/run/secrets/jwtPrivateKey")
 	if err != nil {
 		panic(err)
 	}
 
-	jwtPublicKey, err := ioutil.ReadFile("cert/jwtRS256.key.pub")
+	jwtPublicKey, err = ioutil.ReadFile("/run/secrets/jwtPublicKey")
 	if err != nil {
 		panic(err)
+	}
+
+	if len(jwtPrivateKey) < 1 || len(jwtPublicKey) < 1 {
+		panic("failed to load jwt keys")
 	}
 
 	dbDsn := os.Getenv("DATABASE_URL")

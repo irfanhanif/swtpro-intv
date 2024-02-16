@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/repository"
 	"github.com/irfanhanif/swtpro-intv/utils"
@@ -26,13 +27,17 @@ func NewTokenGenerator(getUser repository.IGetUserByPhoneNumber, incLogin reposi
 func (tk *tokenGenerator) GenerateToken(ctx context.Context, phoneNumber, password string) (string, uuid.UUID, error) {
 	user, err := tk.getUser.GetUserByPhoneNumber(ctx, phoneNumber)
 	if errors.Is(err, repository.ErrNoRows) {
+		fmt.Println("tidak ketemu")
 		return "", uuid.Nil, ErrLoginFailed
 	}
 	if err != nil {
 		return "", uuid.Nil, err
 	}
 
+	fmt.Println(user.HashedPassword(), user.Password())
+
 	if err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword()), []byte(password)); err != nil {
+		fmt.Println("pas compare", err)
 		return "", uuid.Nil, ErrLoginFailed
 	}
 

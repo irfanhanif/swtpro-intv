@@ -26,7 +26,7 @@ const (
 
 type INewUser interface {
 	NewUser(phoneNumber, password, fullName string) IUser
-	NewUserWithID(id uuid.UUID, phoneNumber, password, fullName string) IUser
+	NewUserWithID(id uuid.UUID, phoneNumber, hashedPassword, fullName string) IUser
 }
 
 type userFactory struct {
@@ -34,20 +34,24 @@ type userFactory struct {
 }
 
 func (u *userFactory) NewUser(phoneNumber, password, fullName string) IUser {
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+	hashedPassword := string(bytes)
+
 	return &user{
-		id:          u.uuid.New(),
-		phoneNumber: phoneNumber,
-		password:    password,
-		fullName:    fullName,
+		id:             u.uuid.New(),
+		phoneNumber:    phoneNumber,
+		password:       password,
+		hashedPassword: hashedPassword,
+		fullName:       fullName,
 	}
 }
 
-func (u *userFactory) NewUserWithID(id uuid.UUID, phoneNumber, password, fullName string) IUser {
+func (u *userFactory) NewUserWithID(id uuid.UUID, phoneNumber, hashedPassword, fullName string) IUser {
 	return &user{
-		id:          id,
-		phoneNumber: phoneNumber,
-		password:    password,
-		fullName:    fullName,
+		id:             id,
+		phoneNumber:    phoneNumber,
+		hashedPassword: hashedPassword,
+		fullName:       fullName,
 	}
 }
 
@@ -66,10 +70,11 @@ type IUser interface {
 }
 
 type user struct {
-	id          uuid.UUID
-	phoneNumber string
-	password    string
-	fullName    string
+	id             uuid.UUID
+	phoneNumber    string
+	password       string
+	hashedPassword string
+	fullName       string
 }
 
 func (u *user) ID() uuid.UUID {
@@ -85,8 +90,7 @@ func (u *user) Password() string {
 }
 
 func (u *user) HashedPassword() string {
-	bytes, _ := bcrypt.GenerateFromPassword([]byte(u.password), 10)
-	return string(bytes)
+	return u.hashedPassword
 }
 
 func (u *user) FullName() string {
