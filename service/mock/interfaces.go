@@ -128,3 +128,40 @@ func (mr *MockIGetUserByIDMockRecorder) GetUserByID(ctx, id interface{}) *gomock
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockIGetUserByID)(nil).GetUserByID), ctx, id)
 }
+
+// MockIUpdateUserByID is a mock of IUpdateUserByID interface.
+type MockIUpdateUserByID struct {
+	ctrl     *gomock.Controller
+	recorder *MockIUpdateUserByIDMockRecorder
+}
+
+// MockIUpdateUserByIDMockRecorder is the mock recorder for MockIUpdateUserByID.
+type MockIUpdateUserByIDMockRecorder struct {
+	mock *MockIUpdateUserByID
+}
+
+// NewMockIUpdateUserByID creates a new mock instance.
+func NewMockIUpdateUserByID(ctrl *gomock.Controller) *MockIUpdateUserByID {
+	mock := &MockIUpdateUserByID{ctrl: ctrl}
+	mock.recorder = &MockIUpdateUserByIDMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockIUpdateUserByID) EXPECT() *MockIUpdateUserByIDMockRecorder {
+	return m.recorder
+}
+
+// UpdateUserByID mocks base method.
+func (m *MockIUpdateUserByID) UpdateUserByID(ctx context.Context, id uuid.UUID, updateData service.UserUpdateData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateUserByID", ctx, id, updateData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateUserByID indicates an expected call of UpdateUserByID.
+func (mr *MockIUpdateUserByIDMockRecorder) UpdateUserByID(ctx, id, updateData interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserByID", reflect.TypeOf((*MockIUpdateUserByID)(nil).UpdateUserByID), ctx, id, updateData)
+}

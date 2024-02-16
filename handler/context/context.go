@@ -10,4 +10,5 @@ type IContext interface {
 	Set(key string, val interface{})
 	Get(key string) interface{}
 	Param(name string) string
+	NoContent(code int) error
 }

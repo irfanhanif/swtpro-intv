@@ -26,5 +26,5 @@ func (s *Server) GetV1UsersUserID(ctx echo.Context, userID string) error {
 }
 
 func (s *Server) PatchV1UsersUserID(ctx echo.Context, userID string) error {
-	return nil
+	return s.PatchV1UsersHandler.Handle(ctx)
 }

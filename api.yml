@@ -270,6 +270,8 @@ components:
 
     PatchV1UsersResponse400:
       type: object
+      required:
+        - message
       properties:
         message:
           type: array

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/entity"
+	"github.com/irfanhanif/swtpro-intv/valueobj"
 	"strings"
 )
 
@@ -44,4 +45,10 @@ var ErrNotFound = errors.New("data not found")
 // Returns ErrNotFound when user is not found
 type IGetUserByID interface {
 	GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUser, error)
+}
+
+// Returns ErrNotFound when user is not found
+// Returns ErrPhoneNumberConflict when phone number already exists
+type IUpdateUserByID interface {
+	UpdateUserByID(ctx context.Context, id uuid.UUID, updateData valueobj.UserUpdateData) error
 }

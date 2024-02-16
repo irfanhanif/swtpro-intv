@@ -9,6 +9,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/entity"
+	"github.com/irfanhanif/swtpro-intv/valueobj"
 )
 
 //go:generate mockgen -source=interfaces.go -destination=interfaces.mock.gen.go -package=repository
@@ -37,4 +38,8 @@ type IIncrementLoginCount interface {
 // Return ErrNoRows when no data found
 type IGetUserByID interface {
 	GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUser, error)
+}
+
+type IUpdateUserByID interface {
+	UpdateUserByID(ctx context.Context, id uuid.UUID, updateData valueobj.UserUpdateData) error
 }

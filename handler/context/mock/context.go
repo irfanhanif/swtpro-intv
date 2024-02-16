@@ -62,6 +62,20 @@ func (mr *MockIContextMockRecorder) JSON(code, i interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "JSON", reflect.TypeOf((*MockIContext)(nil).JSON), code, i)
 }
 
+// NoContent mocks base method.
+func (m *MockIContext) NoContent(code int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NoContent", code)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// NoContent indicates an expected call of NoContent.
+func (mr *MockIContextMockRecorder) NoContent(code interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NoContent", reflect.TypeOf((*MockIContext)(nil).NoContent), code)
+}
+
 // Param mocks base method.
 func (m *MockIContext) Param(name string) string {
 	m.ctrl.T.Helper()

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/google/uuid"
 	"github.com/irfanhanif/swtpro-intv/entity"
+	"github.com/irfanhanif/swtpro-intv/valueobj"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 )
@@ -84,4 +85,48 @@ func (r *Repository) GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUse
 	default:
 		return nil, err
 	}
+}
+
+func (r *Repository) UpdateUserByID(ctx context.Context, id uuid.UUID, updateData valueobj.UserUpdateData) error {
+	tx, err := r.Db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if updateData.PhoneNumber != nil {
+		query := `update "user" set phone_number = $1 where id = $2`
+
+		phoneNumberPtr := updateData.PhoneNumber
+		res, err := tx.Exec(query, *phoneNumberPtr, id)
+		pqErr, ok := err.(*pq.Error)
+		if ok && pqErr.Code == "23505" && pqErr.Constraint == "user_phone_number_unique" {
+			return ErrPhoneNumberConflict
+		}
+		if err != nil {
+			return err
+		}
+
+		rowAffected, err := res.RowsAffected()
+		if rowAffected < 1 {
+			return ErrNoRows
+		}
+	}
+
+	if updateData.FullName != nil {
+		query := `update "user" set full_name = $1 where id = $2`
+
+		fullNamePtr := updateData.FullName
+		res, err := tx.Exec(query, *fullNamePtr, id)
+		if err != nil {
+			return err
+		}
+
+		rowAffected, err := res.RowsAffected()
+		if rowAffected < 1 {
+			return ErrNoRows
+		}
+	}
+
+	return tx.Commit()
 }

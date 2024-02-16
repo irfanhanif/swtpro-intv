@@ -96,14 +96,8 @@ func (u *user) FullName() string {
 func (u *user) Validate() []error {
 	errs := []error{}
 
-	if len(u.phoneNumber) < MIN_PHONE_NUMBER_CHARS {
-		errs = append(errs, fmt.Errorf("Phone Number must minimum has %d characters", MIN_PHONE_NUMBER_CHARS))
-	}
-	if len(u.phoneNumber) > MAX_PHONE_NUMBER_CHARS {
-		errs = append(errs, fmt.Errorf("Phone Number must maximum has %d characters", MAX_PHONE_NUMBER_CHARS))
-	}
-	if !strings.HasPrefix(u.phoneNumber, INDONESIA_PHONE_CODE) {
-		errs = append(errs, fmt.Errorf("Phone Number must has %s as a prefix", INDONESIA_PHONE_CODE))
+	if phoneNumberErrs := CheckPhoneNumber(u.phoneNumber); phoneNumberErrs != nil {
+		errs = append(errs, phoneNumberErrs...)
 	}
 
 	if len(u.password) < MIN_PASSWORD_CHARS {
@@ -116,11 +110,8 @@ func (u *user) Validate() []error {
 		errs = append(errs, errors.New("Password must have a capital letter, a number, a special character (non alpha numberic)"))
 	}
 
-	if len(u.fullName) < MIN_FULL_NAME_CHARS {
-		errs = append(errs, fmt.Errorf("Full name cannot less than %d characters", MIN_FULL_NAME_CHARS))
-	}
-	if len(u.fullName) > MAX_FULL_NAME_CHARS {
-		errs = append(errs, fmt.Errorf("Full name cannot more than %d characters", MAX_FULL_NAME_CHARS))
+	if fullNameErrs := CheckFullName(u.fullName); fullNameErrs != nil {
+		errs = append(errs, fullNameErrs...)
 	}
 
 	if len(errs) > 0 {
@@ -150,4 +141,43 @@ func (u *user) checkPassword(password string) bool {
 	}
 
 	return lowerCasePresent && uppercasePresent && numberPresent && specialCharacterPresent
+}
+
+// todo: refactor extract class
+func CheckFullName(fullName string) []error {
+	var errs []error
+
+	if len(fullName) < MIN_FULL_NAME_CHARS {
+		errs = append(errs, fmt.Errorf("Full name cannot less than %d characters", MIN_FULL_NAME_CHARS))
+	}
+	if len(fullName) > MAX_FULL_NAME_CHARS {
+		errs = append(errs, fmt.Errorf("Full name cannot more than %d characters", MAX_FULL_NAME_CHARS))
+	}
+
+	if len(errs) > 0 {
+		return errs
+	}
+
+	return nil
+}
+
+// todo: refactor extract class
+func CheckPhoneNumber(phoneNumber string) []error {
+	errs := []error{}
+
+	if len(phoneNumber) < MIN_PHONE_NUMBER_CHARS {
+		errs = append(errs, fmt.Errorf("Phone Number must minimum has %d characters", MIN_PHONE_NUMBER_CHARS))
+	}
+	if len(phoneNumber) > MAX_PHONE_NUMBER_CHARS {
+		errs = append(errs, fmt.Errorf("Phone Number must maximum has %d characters", MAX_PHONE_NUMBER_CHARS))
+	}
+	if !strings.HasPrefix(phoneNumber, INDONESIA_PHONE_CODE) {
+		errs = append(errs, fmt.Errorf("Phone Number must has %s as a prefix", INDONESIA_PHONE_CODE))
+	}
+
+	if len(errs) > 0 {
+		return errs
+	}
+
+	return nil
 }
