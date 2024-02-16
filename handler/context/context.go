@@ -9,4 +9,5 @@ type IContext interface {
 	JSON(code int, i interface{}) error
 	Set(key string, val interface{})
 	Get(key string) interface{}
+	Param(name string) string
 }

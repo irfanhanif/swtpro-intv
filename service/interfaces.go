@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/google/uuid"
+	"github.com/irfanhanif/swtpro-intv/entity"
 	"strings"
 )
 
@@ -36,4 +37,11 @@ var ErrLoginFailed = errors.New("login failed")
 // Returns ErrLoginFailed when login attempt is not allowed
 type IGenerateToken interface {
 	GenerateToken(ctx context.Context, phoneNumber, password string) (string, uuid.UUID, error)
+}
+
+var ErrNotFound = errors.New("data not found")
+
+// Returns ErrNotFound when user is not found
+type IGetUserByID interface {
+	GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUser, error)
 }

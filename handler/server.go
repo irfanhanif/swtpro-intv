@@ -7,6 +7,7 @@ import (
 type Server struct {
 	PostV1UsersHandler IHandle
 	PostV1TokenHandler IHandle
+	GetV1UsersHandler  IHandle
 }
 
 type NewServerOptions struct {

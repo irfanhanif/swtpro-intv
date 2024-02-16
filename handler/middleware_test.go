@@ -53,7 +53,7 @@ func TestAuthenticatorMiddleware_Handle(t *testing.T) {
 	}
 
 	tests := map[string]test{
-		"should forward to handler " +
+		"should forward to handler.go " +
 			"when token is valid": {
 			args: args{
 				request: func() *http.Request {

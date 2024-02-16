@@ -22,7 +22,7 @@ func (s *Server) PostV1Token(ctx echo.Context) error {
 }
 
 func (s *Server) GetV1UsersUserIDProfile(ctx echo.Context, userID string) error {
-	return nil
+	return s.GetV1UsersHandler.Handle(ctx)
 }
 
 func (s *Server) PatchV1UsersUserIDProfile(ctx echo.Context, userID string) error {

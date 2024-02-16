@@ -78,7 +78,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /v1/users/{userID}/profile:
+  /v1/users/{userID}:
     get:
       tags:
         - User Profile
@@ -98,7 +98,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetV1UsersProfile"
+                $ref: "#/components/schemas/GetV1Users"
         400:
           description: Invalid request. Could be userID empty or format invalid.
           content:
@@ -142,7 +142,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatchV1UsersProfileRequest"
+              $ref: "#/components/schemas/PatchV1UsersRequest"
       responses:
         204:
           description: Successfull update user profile.
@@ -151,7 +151,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PatchV1UsersProfileResponse400"
+                $ref: "#/components/schemas/PatchV1UsersResponse400"
         403:
           description: Forbidden
           content:
@@ -245,7 +245,20 @@ components:
           type: string
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
-    GetV1UsersProfile:
+    GetV1Users:
+      type: object
+      required:
+        - phoneNumber
+        - fullName
+      properties:
+        phoneNumber:
+          type: string
+          example: '+6281234567890'
+        fullName:
+          type: string
+          example: John Doe
+
+    PatchV1UsersRequest:
       type: object
       properties:
         phoneNumber:
@@ -255,17 +268,7 @@ components:
           type: string
           example: John Doe
 
-    PatchV1UsersProfileRequest:
-      type: object
-      properties:
-        phoneNumber:
-          type: string
-          example: '+6281234567890'
-        fullName:
-          type: string
-          example: John Doe
-
-    PatchV1UsersProfileResponse400:
+    PatchV1UsersResponse400:
       type: object
       properties:
         message:

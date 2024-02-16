@@ -62,6 +62,20 @@ func (mr *MockIContextMockRecorder) JSON(code, i interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "JSON", reflect.TypeOf((*MockIContext)(nil).JSON), code, i)
 }
 
+// Param mocks base method.
+func (m *MockIContext) Param(name string) string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Param", name)
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Param indicates an expected call of Param.
+func (mr *MockIContextMockRecorder) Param(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Param", reflect.TypeOf((*MockIContext)(nil).Param), name)
+}
+
 // Request mocks base method.
 func (m *MockIContext) Request() *http.Request {
 	m.ctrl.T.Helper()

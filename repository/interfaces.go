@@ -33,3 +33,7 @@ type IGetUserByPhoneNumber interface {
 type IIncrementLoginCount interface {
 	IncrementLoginCount(ctx context.Context, userID uuid.UUID) error
 }
+
+type IGetUserByID interface {
+	GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUser, error)
+}

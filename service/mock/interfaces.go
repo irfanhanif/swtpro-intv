@@ -10,6 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	uuid "github.com/google/uuid"
+	entity "github.com/irfanhanif/swtpro-intv/entity"
 	service "github.com/irfanhanif/swtpro-intv/service"
 )
 
@@ -88,4 +89,42 @@ func (m *MockIGenerateToken) GenerateToken(ctx context.Context, phoneNumber, pas
 func (mr *MockIGenerateTokenMockRecorder) GenerateToken(ctx, phoneNumber, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateToken", reflect.TypeOf((*MockIGenerateToken)(nil).GenerateToken), ctx, phoneNumber, password)
+}
+
+// MockIGetUserByID is a mock of IGetUserByID interface.
+type MockIGetUserByID struct {
+	ctrl     *gomock.Controller
+	recorder *MockIGetUserByIDMockRecorder
+}
+
+// MockIGetUserByIDMockRecorder is the mock recorder for MockIGetUserByID.
+type MockIGetUserByIDMockRecorder struct {
+	mock *MockIGetUserByID
+}
+
+// NewMockIGetUserByID creates a new mock instance.
+func NewMockIGetUserByID(ctrl *gomock.Controller) *MockIGetUserByID {
+	mock := &MockIGetUserByID{ctrl: ctrl}
+	mock.recorder = &MockIGetUserByIDMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockIGetUserByID) EXPECT() *MockIGetUserByIDMockRecorder {
+	return m.recorder
+}
+
+// GetUserByID mocks base method.
+func (m *MockIGetUserByID) GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserByID", ctx, id)
+	ret0, _ := ret[0].(entity.IUser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserByID indicates an expected call of GetUserByID.
+func (mr *MockIGetUserByIDMockRecorder) GetUserByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockIGetUserByID)(nil).GetUserByID), ctx, id)
 }
