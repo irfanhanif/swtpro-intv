@@ -12,6 +12,7 @@ import (
 	uuid "github.com/google/uuid"
 	entity "github.com/irfanhanif/swtpro-intv/entity"
 	service "github.com/irfanhanif/swtpro-intv/service"
+	valueobj "github.com/irfanhanif/swtpro-intv/valueobj"
 )
 
 // MockIRegisterNewUser is a mock of IRegisterNewUser interface.
@@ -153,7 +154,7 @@ func (m *MockIUpdateUserByID) EXPECT() *MockIUpdateUserByIDMockRecorder {
 }
 
 // UpdateUserByID mocks base method.
-func (m *MockIUpdateUserByID) UpdateUserByID(ctx context.Context, id uuid.UUID, updateData service.UserUpdateData) error {
+func (m *MockIUpdateUserByID) UpdateUserByID(ctx context.Context, id uuid.UUID, updateData valueobj.UserUpdateData) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUserByID", ctx, id, updateData)
 	ret0, _ := ret[0].(error)
