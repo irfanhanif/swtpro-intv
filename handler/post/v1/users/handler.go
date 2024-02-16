@@ -20,7 +20,7 @@ func NewHandler(svc service.IRegisterNewUser) *handler {
 	}
 }
 
-func (h *handler) HandlePostV1Users(ctx handlerCtx.IContext) error {
+func (h *handler) Handle(ctx handlerCtx.IContext) error {
 	request := ctx.Request()
 
 	bodyBytes, err := io.ReadAll(request.Body)

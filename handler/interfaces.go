@@ -9,3 +9,7 @@ type IHandlePostV1Users interface {
 type IHandlePostV1Token interface {
 	HandlePostV1Token(ctx context.IContext) error
 }
+
+type IHandle interface {
+	Handle(ctx context.IContext) error
+}

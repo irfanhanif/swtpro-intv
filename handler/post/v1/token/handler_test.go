@@ -258,7 +258,7 @@ func TestHandler_HandlePostV1Token(t *testing.T) {
 			}
 
 			h := NewHandler(mockGenerateToken)
-			actualErr := h.HandlePostV1Token(mockCtx)
+			actualErr := h.Handle(mockCtx)
 
 			assert.Equal(t, test.wantErr, actualErr)
 		})

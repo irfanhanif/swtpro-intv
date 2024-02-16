@@ -301,7 +301,7 @@ func TestHandlePostV1Users(t *testing.T) {
 			}
 
 			h := NewHandler(mockRegisterNewUser)
-			actualErr := h.HandlePostV1Users(mockCtx)
+			actualErr := h.Handle(mockCtx)
 
 			assert.Equal(t, test.wantErr, actualErr)
 		})

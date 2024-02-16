@@ -14,11 +14,11 @@ import (
 //}
 
 func (s *Server) PostV1Users(ctx echo.Context) error {
-	return s.PostV1UsersHandler.HandlePostV1Users(ctx)
+	return s.PostV1UsersHandler.Handle(ctx)
 }
 
 func (s *Server) PostV1Token(ctx echo.Context) error {
-	return s.PostV1TokenHandler.HandlePostV1Token(ctx)
+	return s.PostV1TokenHandler.Handle(ctx)
 }
 
 func (s *Server) GetV1UsersUserIDProfile(ctx echo.Context, userID string) error {
