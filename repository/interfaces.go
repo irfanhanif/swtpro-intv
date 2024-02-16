@@ -34,6 +34,7 @@ type IIncrementLoginCount interface {
 	IncrementLoginCount(ctx context.Context, userID uuid.UUID) error
 }
 
+// Return ErrNoRows when no data found
 type IGetUserByID interface {
 	GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUser, error)
 }
