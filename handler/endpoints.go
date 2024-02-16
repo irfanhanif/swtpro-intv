@@ -21,10 +21,10 @@ func (s *Server) PostV1Token(ctx echo.Context) error {
 	return s.PostV1TokenHandler.Handle(ctx)
 }
 
-func (s *Server) GetV1UsersUserIDProfile(ctx echo.Context, userID string) error {
+func (s *Server) GetV1UsersUserID(ctx echo.Context, userID string) error {
 	return s.GetV1UsersHandler.Handle(ctx)
 }
 
-func (s *Server) PatchV1UsersUserIDProfile(ctx echo.Context, userID string) error {
+func (s *Server) PatchV1UsersUserID(ctx echo.Context, userID string) error {
 	return nil
 }

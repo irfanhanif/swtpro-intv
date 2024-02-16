@@ -65,3 +65,23 @@ func (r *Repository) IncrementLoginCount(ctx context.Context, userID uuid.UUID) 
 
 	return nil
 }
+
+func (r *Repository) GetUserByID(ctx context.Context, id uuid.UUID) (entity.IUser, error) {
+	var userModel UserModel
+
+	query := `select id, phone_number, password, full_name from "user" where id = $1`
+	row := r.Db.QueryRow(query, id)
+	switch err := row.Scan(
+		&userModel.ID,
+		&userModel.PhoneNumber,
+		&userModel.Password,
+		&userModel.FullName,
+	); errors.Cause(err) {
+	case nil:
+		return entity.NewUserFactory(nil).NewUserWithID(userModel.ID, userModel.PhoneNumber, userModel.Password, userModel.FullName), nil
+	case sql.ErrNoRows:
+		return nil, ErrNoRows
+	default:
+		return nil, err
+	}
+}

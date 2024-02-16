@@ -24,10 +24,11 @@ type IValidateJWT interface {
 
 type jwt struct {
 	secretKey []byte
+	publicKey []byte
 }
 
-func NewJWT(secretKey []byte) *jwt {
-	return &jwt{secretKey: secretKey}
+func NewJWT(secretKey, publicKey []byte) *jwt {
+	return &jwt{secretKey: secretKey, publicKey: publicKey}
 }
 
 func (j *jwt) GenerateJWT(userID uuid.UUID) (string, error) {
@@ -47,10 +48,15 @@ func (j *jwt) GenerateJWT(userID uuid.UUID) (string, error) {
 }
 
 func (j *jwt) ValidateJWT(token string) (uuid.UUID, error) {
-	var claims *CustomClaims
+	claims := &CustomClaims{}
+
+	key, err := jwtLib.ParseRSAPublicKeyFromPEM(j.publicKey)
+	if err != nil {
+		return uuid.Nil, err
+	}
 
 	tkn, err := jwtLib.ParseWithClaims(token, claims, func(token *jwtLib.Token) (interface{}, error) {
-		return j.secretKey, nil
+		return key, nil
 	})
 	if err != nil {
 		return uuid.Nil, err

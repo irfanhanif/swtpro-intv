@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/irfanhanif/swtpro-intv/generated"
 	"github.com/irfanhanif/swtpro-intv/handler/context"
 	"github.com/irfanhanif/swtpro-intv/utils"
@@ -27,6 +28,7 @@ func (am *authenticatorMiddleware) Handle(ctx context.IContext) error {
 
 	userID, err := am.jwt.ValidateJWT(token)
 	if err != nil {
+		fmt.Println(err)
 		return ctx.JSON(http.StatusForbidden, &generated.Error{Error: "forbidden"})
 	}
 
