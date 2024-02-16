@@ -37,7 +37,7 @@ func (u *userRegistration) RegisterNewUser(ctx context.Context, newUser NewUser)
 	}
 
 	err := u.repo.CreateNewUser(ctx, user)
-	if errors.Is(err, ErrPhoneNumberConflict) {
+	if errors.Is(err, repository.ErrPhoneNumberConflict) {
 		return uuid.Nil, ErrPhoneNumberConflict
 	}
 	if err != nil {
