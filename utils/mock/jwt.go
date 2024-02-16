@@ -48,3 +48,41 @@ func (mr *MockIGenerateJWTMockRecorder) GenerateJWT(userID interface{}) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateJWT", reflect.TypeOf((*MockIGenerateJWT)(nil).GenerateJWT), userID)
 }
+
+// MockIValidateJWT is a mock of IValidateJWT interface.
+type MockIValidateJWT struct {
+	ctrl     *gomock.Controller
+	recorder *MockIValidateJWTMockRecorder
+}
+
+// MockIValidateJWTMockRecorder is the mock recorder for MockIValidateJWT.
+type MockIValidateJWTMockRecorder struct {
+	mock *MockIValidateJWT
+}
+
+// NewMockIValidateJWT creates a new mock instance.
+func NewMockIValidateJWT(ctrl *gomock.Controller) *MockIValidateJWT {
+	mock := &MockIValidateJWT{ctrl: ctrl}
+	mock.recorder = &MockIValidateJWTMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockIValidateJWT) EXPECT() *MockIValidateJWTMockRecorder {
+	return m.recorder
+}
+
+// ValidateJWT mocks base method.
+func (m *MockIValidateJWT) ValidateJWT(token string) (uuid.UUID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidateJWT", token)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ValidateJWT indicates an expected call of ValidateJWT.
+func (mr *MockIValidateJWTMockRecorder) ValidateJWT(token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateJWT", reflect.TypeOf((*MockIValidateJWT)(nil).ValidateJWT), token)
+}

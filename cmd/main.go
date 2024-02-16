@@ -46,6 +46,8 @@ func newServer() *handler.Server {
 	userRegistrationService := service.NewUserRegistration(userEntityFactory, repo)
 	tokenGeneratorService := service.NewTokenGenerator(repo, repo, jwt)
 
+	//authenticatorMiddleware := handler.NewAuthenticatorMiddleware(nil)
+
 	postV1UsersHandler := postV1Users.NewHandler(userRegistrationService)
 	postV1TokenHandler := postV1Token.NewHandler(tokenGeneratorService)
 

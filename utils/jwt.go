@@ -33,3 +33,7 @@ func (j *jwt) GenerateJWT(userID uuid.UUID) (string, error) {
 
 	return token.SignedString(key)
 }
+
+type IValidateJWT interface {
+	ValidateJWT(token string) (uuid.UUID, error)
+}
